@@ -1,5 +1,6 @@
 import { registry } from "./registery";
 import type { SpecNode } from "./types";
+import { withRenderTracking } from "./withRenderTracking";
 
 
 export function renderNode(node: SpecNode): React.ReactNode {
@@ -9,11 +10,14 @@ export function renderNode(node: SpecNode): React.ReactNode {
     return <div>Unknown component: {node.type}</div>;
   }
 
+  // Wrap component with render tracking
+  const TrackedComponent = withRenderTracking(Component, node.id);
+
   return (
-    <Component {...node.props}>
+    <TrackedComponent {...node.props}>
       {node.children?.map((child) => (
         <div key={child.id}>{renderNode(child)}</div>
       ))}
-    </Component>
+    </TrackedComponent>
   );
 }
