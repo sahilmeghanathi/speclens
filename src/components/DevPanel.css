@@ -1,7 +1,32 @@
 /**
  * DevPanel Styles
- * Minimal styling for the developer panel
+ * Minimal styling for the developer panel with unified theme
  */
+
+:root {
+  /* Primary backgrounds */
+  --bg-primary: #0f0f1e;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16213e;
+  --bg-accent: rgba(255, 255, 255, 0.05);
+  
+  /* Accent colors */
+  --accent-blue: #60a5fa;
+  --accent-purple: #a78bfa;
+  --accent-green: #10b981;
+  --accent-orange: #f97316;
+  --accent-amber: #fbbf24;
+  --accent-red: #ef4444;
+  
+  /* Text colors */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  
+  /* Borders */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-hover: rgba(255, 255, 255, 0.2);
+}
 
 /* Scrollbar styling for devpanel */
 .devpanel-container::-webkit-scrollbar {
@@ -9,14 +34,14 @@
 }
 
 .devpanel-container::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--bg-secondary);
 }
 
 .devpanel-container::-webkit-scrollbar-thumb {
-  background: #444;
+  background: rgba(96, 165, 250, 0.3);
   border-radius: 3px;
 }
 
 .devpanel-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(96, 165, 250, 0.5);
 }

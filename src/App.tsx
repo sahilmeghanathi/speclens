@@ -23,9 +23,9 @@ function App() {
 
   return (
     <RenderTrackerProvider enabled={true}>
-      {viewMode === 'spec-editor' ? (
+      {/* {viewMode === 'spec-editor' ? ( */}
         <SpecEditor />
-      ) : (
+      {/* // ) : ( */}
         <div style={{ display: 'flex', height: '100vh', width: '100%', flexDirection: viewMode === 'dashboard' ? 'column' : 'row' }}>
           {/* Dashboard - Primary View */}
           <div style={{ flex: viewMode === 'both' ? '1 1 50%' : '1', overflow: 'hidden' }}>
@@ -39,8 +39,8 @@ function App() {
                 flex: '1 1 50%',
                 padding: 30,
                 overflow: 'auto',
-                background: '#ffffff',
-                borderLeft: '1px solid #e0e0e0'
+                background: 'linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 100%)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.1)'
               }}
             >
               {renderNode(sampleSpec)}
@@ -65,18 +65,21 @@ function App() {
                 background: 'linear-gradient(135deg, #a78bfa, #f97316)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '13px',
                 fontWeight: '600',
-                boxShadow: '0 4px 12px rgba(169, 139, 250, 0.4)',
-                transition: 'all 0.2s ease'
+                boxShadow: '0 4px 16px rgba(169, 139, 250, 0.4)',
+                transition: 'all 0.2s ease',
+                backdropFilter: 'blur(10px)'
               }}
               onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+                (e.target as HTMLElement).style.transform = 'translateY(-3px)';
+                (e.target as HTMLElement).style.boxShadow = '0 6px 24px rgba(169, 139, 250, 0.6)';
               }}
               onMouseLeave={(e) => {
                 (e.target as HTMLElement).style.transform = 'translateY(0)';
+                (e.target as HTMLElement).style.boxShadow = '0 4px 16px rgba(169, 139, 250, 0.4)';
               }}
             >
               ✏️ Editor
@@ -88,25 +91,28 @@ function App() {
                 background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '13px',
                 fontWeight: '600',
-                boxShadow: '0 4px 12px rgba(96, 165, 250, 0.4)',
-                transition: 'all 0.2s ease'
+                boxShadow: '0 4px 16px rgba(96, 165, 250, 0.4)',
+                transition: 'all 0.2s ease',
+                backdropFilter: 'blur(10px)'
               }}
               onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+                (e.target as HTMLElement).style.transform = 'translateY(-3px)';
+                (e.target as HTMLElement).style.boxShadow = '0 6px 24px rgba(96, 165, 250, 0.6)';
               }}
               onMouseLeave={(e) => {
                 (e.target as HTMLElement).style.transform = 'translateY(0)';
+                (e.target as HTMLElement).style.boxShadow = '0 4px 16px rgba(96, 165, 250, 0.4)';
               }}
             >
               {viewMode === 'dashboard' ? '👁️ Show Spec' : 'Hide Spec'}
             </button>
           </div>
         </div>
-      )}
+      {/* )} */}
     </RenderTrackerProvider>
   );
 }
