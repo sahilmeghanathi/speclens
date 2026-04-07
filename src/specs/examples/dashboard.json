@@ -1,0 +1,46 @@
+{
+  "type": "Grid",
+  "id": "dashboard-grid",
+  "props": {
+    "columns": 4,
+    "gap": 16
+  },
+  "children": [
+    {
+      "type": "StatCard",
+      "id": "stat-1",
+      "props": {
+        "value": 1200,
+        "label": "Total Users",
+        "trend": "up"
+      }
+    },
+    {
+      "type": "StatCard",
+      "id": "stat-2",
+      "props": {
+        "value": 420,
+        "label": "Revenue ($k)",
+        "trend": "up"
+      }
+    },
+    {
+      "type": "StatCard",
+      "id": "stat-3",
+      "props": {
+        "value": 89,
+        "label": "Growth (%)",
+        "trend": "down"
+      }
+    },
+    {
+      "type": "StatCard",
+      "id": "stat-4",
+      "props": {
+        "value": 12,
+        "label": "Active Projects",
+        "trend": "up"
+      }
+    }
+  ]
+}

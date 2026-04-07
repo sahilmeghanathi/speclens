@@ -1,0 +1,62 @@
+{
+  "type": "Grid",
+  "id": "main-group",
+  "props": {
+    "columns": 2,
+    "gap": 16
+  },
+  "children": [
+    {
+      "type": "Card",
+      "id": "group-1",
+      "props": {
+        "title": "Group 1",
+        "description": "First group of cards"
+      },
+      "children": [
+        {
+          "type": "Card",
+          "id": "nested-1-1",
+          "props": {
+            "title": "Nested Card 1",
+            "description": "Content in group 1"
+          }
+        },
+        {
+          "type": "Card",
+          "id": "nested-1-2",
+          "props": {
+            "title": "Nested Card 2",
+            "description": "More content in group 1"
+          }
+        }
+      ]
+    },
+    {
+      "type": "Card",
+      "id": "group-2",
+      "props": {
+        "title": "Group 2",
+        "description": "Second group of cards"
+      },
+      "children": [
+        {
+          "type": "Card",
+          "id": "nested-2-1",
+          "props": {
+            "title": "Nested Card 3",
+            "description": "Content in group 2"
+          }
+        },
+        {
+          "type": "Card",
+          "id": "nested-2-2",
+          "props": {
+            "title": "Nested Card 4",
+            "description": "More content in group 2"
+          }
+        }
+      ]
+    }
+  ]
+}
