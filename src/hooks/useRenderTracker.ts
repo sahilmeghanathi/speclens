@@ -1,9 +1,10 @@
 /**
  * React Hooks for accessing the RenderTracker
  * Provides convenient hooks for components to access tracking data
+ * All hooks are reactive and update when tracker data changes
  */
 
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { tracker } from '../core/renderTracker'
 import type { RenderTracker } from '../core/renderTracker'
 import type { RenderStats, ComponentRenderData } from '../core/renderTrackerTypes'
@@ -39,6 +40,7 @@ export function useRenderTracker(): RenderTracker {
 /**
  * Hook to get complete statistics for a specific component
  * Includes render history and prop changes
+ * Reactive - updates whenever tracker data changes
  *
  * @param nodeId - The component node ID to get stats for
  * @returns Complete render statistics, or null if component not tracked
@@ -53,17 +55,34 @@ export function useRenderTracker(): RenderTracker {
  * }
  *
  * @remarks
- * - Uses useMemo to avoid unnecessary recalculations
+ * - Automatically updates when tracker data changes
  * - Returns null if component hasn't been tracked yet
- * - Stats update on component renders (when withRenderTracking wrapper rerenders)
+ * - Subscribes to tracker updates on mount, unsubscribes on unmount
  */
 export function useComponentStats(nodeId: string): RenderStats | null {
-  return useMemo(() => tracker.getComponentStats(nodeId), [nodeId])
+  const [stats, setStats] = useState<RenderStats | null>(() =>
+    tracker.getComponentStats(nodeId)
+  )
+
+  useEffect(() => {
+    // Set initial value
+    setStats(tracker.getComponentStats(nodeId))
+
+    // Subscribe to updates
+    const unsubscribe = tracker.subscribe(() => {
+      setStats(tracker.getComponentStats(nodeId))
+    })
+
+    return unsubscribe
+  }, [nodeId])
+
+  return stats
 }
 
 /**
  * Hook to get lightweight statistics for a specific component
  * Without full history (faster for frequent queries)
+ * Reactive - updates whenever tracker data changes
  *
  * @param nodeId - The component node ID to get stats for
  * @returns Component statistics without history, or null if not tracked
@@ -77,16 +96,33 @@ export function useComponentStats(nodeId: string): RenderStats | null {
  *
  * @remarks
  * - Lighter-weight than useComponentStats (no full history)
- * - Still updates reactively
+ * - Automatically updates when tracker data changes
  * - Good for performance-critical display
  */
 export function useComponentData(nodeId: string): ComponentRenderData | null {
-  return useMemo(() => tracker.getStats(nodeId), [nodeId])
+  const [data, setData] = useState<ComponentRenderData | null>(() =>
+    tracker.getStats(nodeId)
+  )
+
+  useEffect(() => {
+    // Set initial value
+    setData(tracker.getStats(nodeId))
+
+    // Subscribe to updates
+    const unsubscribe = tracker.subscribe(() => {
+      setData(tracker.getStats(nodeId))
+    })
+
+    return unsubscribe
+  }, [nodeId])
+
+  return data
 }
 
 /**
  * Hook to get list of props that changed on last render
  * Returns prop keys that differ from previous render
+ * Reactive - updates whenever tracker data changes
  *
  * @param nodeId - The component node ID
  * @returns List of changed prop keys, or null if not tracked
@@ -107,17 +143,34 @@ export function useComponentData(nodeId: string): ComponentRenderData | null {
  * }
  *
  * @remarks
- * - Only shows changes from the most recent render
+ * - Automatically updates when prop changes occur
  * - Returns null if component hasn't rendered yet
  * - Useful for debugging prop changes
  */
 export function usePropChanges(nodeId: string): string[] | null {
-  return useMemo(() => tracker.getPropChanges(nodeId), [nodeId])
+  const [changes, setChanges] = useState<string[] | null>(() =>
+    tracker.getPropChanges(nodeId)
+  )
+
+  useEffect(() => {
+    // Set initial value
+    setChanges(tracker.getPropChanges(nodeId))
+
+    // Subscribe to updates
+    const unsubscribe = tracker.subscribe(() => {
+      setChanges(tracker.getPropChanges(nodeId))
+    })
+
+    return unsubscribe
+  }, [nodeId])
+
+  return changes
 }
 
 /**
  * Hook to get all tracked components' statistics
  * Returns aggregated data for the entire app
+ * Reactive - updates whenever any component renders
  *
  * @returns Object with stats for all tracked components (may be empty)
  *
@@ -138,17 +191,34 @@ export function usePropChanges(nodeId: string): string[] | null {
  * }
  *
  * @remarks
- * - Updates when any tracked component renders
+ * - Automatically updates when any tracked component renders
  * - May be expensive with many tracked components
  * - Consider using useSystemStats for a lighter-weight overview
  */
 export function useAllComponentStats(): Record<string, RenderStats> {
-  return useMemo(() => tracker.getAllStats(), [])
+  const [stats, setStats] = useState<Record<string, RenderStats>>(() =>
+    tracker.getAllStats()
+  )
+
+  useEffect(() => {
+    // Set initial value
+    setStats(tracker.getAllStats())
+
+    // Subscribe to updates
+    const unsubscribe = tracker.subscribe(() => {
+      setStats(tracker.getAllStats())
+    })
+
+    return unsubscribe
+  }, [])
+
+  return stats
 }
 
 /**
  * Hook to get system-wide tracking statistics
  * High-level overview of all tracking activity
+ * Reactive - updates whenever any component renders
  *
  * @returns System statistics
  *
@@ -168,11 +238,26 @@ export function useAllComponentStats(): Record<string, RenderStats> {
  *
  * @remarks
  * - Lightweight aggregation
+ * - Automatically updates when tracker data changes
  * - Memory estimate is approximate
  * - Good for performance monitoring
  */
 export function useSystemStats() {
-  return useMemo(() => tracker.getSystemStats(), [])
+  const [stats, setStats] = useState(() => tracker.getSystemStats())
+
+  useEffect(() => {
+    // Set initial value
+    setStats(tracker.getSystemStats())
+
+    // Subscribe to updates
+    const unsubscribe = tracker.subscribe(() => {
+      setStats(tracker.getSystemStats())
+    })
+
+    return unsubscribe
+  }, [])
+
+  return stats
 }
 
 /**
@@ -198,8 +283,22 @@ export function useSystemStats() {
  * @remarks
  * - Does not directly control tracker (read-only)
  * - Use setTrackerEnabled() from trackerConfig module to actually toggle
- * - Always returns current enabled state
+ * - Automatically updates when enabled state changes
  */
 export function useTrackerEnabled(): boolean {
-  return useMemo(() => tracker.isEnabled(), [])
+  const [enabled, setEnabled] = useState(() => tracker.isEnabled())
+
+  useEffect(() => {
+    // Set initial value
+    setEnabled(tracker.isEnabled())
+
+    // Subscribe to updates (tracker enables/disables)
+    const unsubscribe = tracker.subscribe(() => {
+      setEnabled(tracker.isEnabled())
+    })
+
+    return unsubscribe
+  }, [])
+
+  return enabled
 }

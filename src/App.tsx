@@ -24,6 +24,7 @@ function App() {
   return (
     <RenderTrackerProvider enabled={true}>
       {/* {viewMode === 'spec-editor' ? ( */}
+      
         <SpecEditor />
       {/* // ) : ( */}
         <div style={{ display: 'flex', height: '100vh', width: '100%', flexDirection: viewMode === 'dashboard' ? 'column' : 'row' }}>
@@ -111,6 +112,7 @@ function App() {
               {viewMode === 'dashboard' ? '👁️ Show Spec' : 'Hide Spec'}
             </button>
           </div>
+
         </div>
       {/* )} */}
     </RenderTrackerProvider>

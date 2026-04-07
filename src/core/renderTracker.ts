@@ -47,6 +47,12 @@ export class RenderTracker {
    */
   private initialPropsSnapshot: Map<string, Record<string, any>> = new Map()
 
+  /**
+   * Subscribers that want to be notified of tracker updates
+   * Used by React hooks to trigger re-renders
+   */
+  private subscribers: Set<() => void> = new Set()
+
   constructor() {
     // Initialize with config settings
   }
@@ -122,6 +128,9 @@ export class RenderTracker {
 
     this.renderHistory.set(nodeId, history)
     this.componentStats.set(nodeId, stats)
+    
+    // Notify subscribers of update
+    this._notifySubscribers()
   }
 
   /**
@@ -291,6 +300,43 @@ export class RenderTracker {
     this.componentStats.clear()
     this.renderHistory.clear()
     this.initialPropsSnapshot.clear()
+    this._notifySubscribers()
+  }
+
+  /**
+   * Subscribe to tracker updates
+   * Called by React hooks to trigger re-renders on data changes
+   *
+   * @param callback - Function to call when tracker data updates
+   * @returns Unsubscribe function
+   *
+   * @example
+   * const unsubscribe = tracker.subscribe(() => {
+   *   setUpdateCount(c => c + 1)
+   * })
+   * 
+   * // Cleanup
+   * unsubscribe()
+   */
+  subscribe(callback: () => void): () => void {
+    this.subscribers.add(callback)
+    return () => {
+      this.subscribers.delete(callback)
+    }
+  }
+
+  /**
+   * Notify all subscribers of a tracker update
+   * Called internally whenever data changes
+   */
+  private _notifySubscribers(): void {
+    this.subscribers.forEach((callback) => {
+      try {
+        callback()
+      } catch (error) {
+        console.error('[RenderTracker] Subscriber error:', error)
+      }
+    })
   }
 
   /**
