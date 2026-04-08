@@ -105,6 +105,7 @@ export const Dashboard: React.FC = () => {
       </header>
 
       <div className="dashboard-content">
+        
         {/* Stats Cards */}
         <section className="stats-cards">
           <div className="stat-card stat-card-primary">
@@ -143,6 +144,7 @@ export const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
+
         </section>
 
         {/* Main Content */}
@@ -271,7 +273,7 @@ export const Dashboard: React.FC = () => {
                       <div className="detail-value">
                         {((selectedStats.lastRenderTime - selectedStats.firstRenderTime) / 1000).toFixed(1)}s
                       </div>
-                    </div>
+                    </div> 
                   </div>
                 </div>
 
@@ -340,6 +342,7 @@ export const Dashboard: React.FC = () => {
               </div>
             </section>
           )}
+          
         </div>
       </div>
 
