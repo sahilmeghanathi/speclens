@@ -352,6 +352,7 @@ export class RenderTracker {
     this.componentStats.delete(nodeId)
     this.renderHistory.delete(nodeId)
     this.initialPropsSnapshot.delete(nodeId)
+    this._notifySubscribers()
   }
 
   /**

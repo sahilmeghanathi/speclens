@@ -20,4 +20,5 @@ export function renderNode(node: SpecNode): React.ReactNode {
       ))}
     </TrackedComponent>
   );
+  
 }

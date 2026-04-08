@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { useRenderTracker, useSystemStats, useAllComponentStats } from '../hooks/useRenderTracker'
+import { useRenderTracker, useSystemStats, useAllComponentStats, useTrackerEnabled } from '../hooks/useRenderTracker'
 import { setTrackerEnabled } from '../core/trackerConfig'
 import { formatRenderReason, formatConfidence } from '../core/renderTrackerUtils'
 import './Dashboard.css'
@@ -20,22 +20,23 @@ export const Dashboard: React.FC = () => {
   const tracker = useRenderTracker()
   const systemStats = useSystemStats()
   const allStats = useAllComponentStats()
+  const isEnabledHook = useTrackerEnabled()
   
   const [sortBy, setSortBy] = useState<SortOption>('renders')
   const [filterBy, setFilterBy] = useState<FilterOption>('all')
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null)
-  const [isEnabled, setIsEnabled] = useState(tracker.isEnabled())
-  const [refreshTime, setRefreshTime] = useState<number>(Date.now())
+  const [isEnabled, setIsEnabled] = useState(isEnabledHook)
+  const [lastUpdate, setLastUpdate] = useState(Date.now())
 
-  // Refresh stats every 500ms
+  // Watch for enabled state changes from the hook
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsEnabled(tracker.isEnabled())
-      setRefreshTime(Date.now())
-    }, 500)
+    setIsEnabled(isEnabledHook)
+  }, [isEnabledHook])
 
-    return () => clearInterval(interval)
-  }, [tracker])
+  // Update lastUpdate timestamp when stats change
+  useEffect(() => {
+    setLastUpdate(Date.now())
+  }, [systemStats])
 
   // Sort and filter components
   const sortedComponents = Object.entries(allStats)
@@ -345,7 +346,7 @@ export const Dashboard: React.FC = () => {
       {/* Footer */}
       <footer className="dashboard-footer">
         <div className="footer-info">
-          Last updated: {new Date(refreshTime).toLocaleTimeString()}
+          Last updated: {new Date(lastUpdate).toLocaleTimeString()}
         </div>
         <div className="footer-info">
           Tracking {isEnabled ? '🟢 enabled' : '🔴 disabled'}

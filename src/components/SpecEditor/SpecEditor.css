@@ -53,8 +53,8 @@
 }
 
 .spec-editor-header-title {
-  font-size: 14px;
-  font-weight: 600;
+font-size: 28px;
+  font-weight: 700;
   background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

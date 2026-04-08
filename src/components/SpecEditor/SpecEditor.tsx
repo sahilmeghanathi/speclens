@@ -12,28 +12,88 @@ import './SpecEditor.css';
 
 const DEFAULT_SPEC = JSON.stringify(
   {
-    type: 'Grid',
-    id: 'root-grid',
+    type: 'Card',
+    id: 'root-card',
     props: {
-      columns: 2,
-      gap: 16,
+      title: '📊 Demo Analytics Dashboard',
     },
     children: [
       {
-        type: 'Card',
-        id: 'card-1',
+        type: 'Grid',
+        id: 'metrics-grid',
         props: {
-          title: 'Welcome to Spec Editor',
-          description: 'Edit the JSON spec on the left to see changes in real-time',
+          columns: 3,
         },
+        children: [
+          {
+            type: 'StatCard',
+            id: 'stat-1',
+            props: {
+              label: 'Total Revenue',
+              value: '$45,231',
+              change: '+12.5%',
+            },
+          },
+          {
+            type: 'StatCard',
+            id: 'stat-2',
+            props: {
+              label: 'Active Users',
+              value: '8,391',
+              change: '+8.2%',
+            },
+          },
+          {
+            type: 'StatCard',
+            id: 'stat-3',
+            props: {
+              label: 'Conversion Rate',
+              value: '3.24%',
+              change: '+2.1%',
+            },
+          },
+        ],
       },
       {
-        type: 'Card',
-        id: 'card-2',
+        type: 'Grid',
+        id: 'content-grid',
         props: {
-          title: 'Real-time Tracking',
-          description: 'View render metrics and component tree below',
+          columns: 2,
         },
+        children: [
+          {
+            type: 'Card',
+            id: 'card-1',
+            props: {
+              title: '✨ Interactive Components',
+              description: 'Try changing the "type" property to StatCard, Card, or Grid to see different components rendered. Edit in real-time on the left!',
+            },
+          },
+          {
+            type: 'Card',
+            id: 'card-2',
+            props: {
+              title: '📈 Real-time Updates',
+              description: 'Changes to the JSON spec are reflected instantly in the preview. Check the render metrics below to track performance.',
+            },
+          },
+          {
+            type: 'Card',
+            id: 'card-3',
+            props: {
+              title: '🎯 Component Props',
+              description: 'Each component type has different props. StatCard uses label, value, change. Card uses title, description. Grid uses columns.',
+            },
+          },
+          {
+            type: 'Card',
+            id: 'card-4',
+            props: {
+              title: '🔧 Try It Yourself',
+              description: 'Edit the JSON on the left. Change "columns" in Grid, add more StatCards, or modify Card titles to see the demo in action!',
+            },
+          },
+        ],
       },
     ],
   },
