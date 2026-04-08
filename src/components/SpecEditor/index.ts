@@ -8,6 +8,9 @@ export { ComponentTreeView } from './components/ComponentTreeView';
 
 // Hooks
 export { useSpecEditor } from './hooks/useSpecEditor';
+export { useSpecEditorLogic } from './hooks/useSpecEditorLogic';
+export { useMetricsSummary, type MetricsData } from './hooks/useMetricsSummary';
+export { useComponentTree, type TreeNodeData } from './hooks/useComponentTree';
 export { useColumnResize } from './hooks/useColumnResize';
 export { useDebounce } from './hooks/useDebounce';
 

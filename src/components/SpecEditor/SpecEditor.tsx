@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState, useMemo, memo, type ReactNode } from 'react';
+import { useEffect, useMemo, memo, type ReactNode } from 'react';
 import { useSpecEditor } from './hooks/useSpecEditor';
 import { useDebounce } from './hooks/useDebounce';
-import { validateSpec } from './utils/specValidation';
+import { useSpecEditorLogic } from './hooks/useSpecEditorLogic';
 import { Header } from './parts/Header';
 import { JSONEditor } from './components/JSONEditor';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -151,8 +151,12 @@ export const SpecEditor = memo(function SpecEditor() {
   } = useSpecEditor();
 
   const debouncedJson = useDebounce(specJson || DEFAULT_SPEC, 300);
-  const [dividerPos, setDividerPos] = useState(50); // 50% for equal split
-  const [isDragging, setIsDragging] = useState(false);
+  const { dividerPos, isDragging, handleMouseDown, handleSave } = useSpecEditorLogic({
+    specJson,
+    debouncedJson,
+    setParsedSpec,
+    setValidationErrors,
+  });
 
   // Initialize with default spec if empty - once on mount
   useEffect(() => {
@@ -160,63 +164,6 @@ export const SpecEditor = memo(function SpecEditor() {
       setSpecJson(DEFAULT_SPEC);
     }
   }, []);
-
-  // Handle spec validation and parsing - optimized to run on debounced value
-  useEffect(() => {
-    const errors = validateSpec(debouncedJson);
-    const hasErrors = errors.length > 0;
-
-    setValidationErrors(hasErrors ? errors : null);
-
-    if (!hasErrors && debouncedJson.trim()) {
-      try {
-        const parsed = JSON.parse(debouncedJson);
-        setParsedSpec(parsed);
-      } catch {
-        // Already caught by validation
-      }
-    } else if (!debouncedJson.trim()) {
-      setParsedSpec(null);
-    }
-  }, [debouncedJson, setValidationErrors, setParsedSpec]);
-
-  const handleMouseDown = useCallback(() => {
-    setIsDragging(true);
-  }, []);
-
-  const handleSave = useCallback(() => {
-    localStorage.setItem('last-spec', specJson);
-  }, [specJson]);
-
-  // Handle dragging - optimized with separate effect
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const container = document.querySelector('.spec-editor-container') as HTMLElement;
-      if (!container) return;
-
-      const rect = container.getBoundingClientRect();
-      const newPos = ((e.clientX - rect.left) / rect.width) * 100;
-
-      // Constrain between 20% and 80%
-      if (newPos >= 20 && newPos <= 80) {
-        setDividerPos(newPos);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
 
   // Memoize preview props to prevent child re-renders
   const previewProps = useMemo(

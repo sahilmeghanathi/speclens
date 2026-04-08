@@ -1,12 +1,13 @@
 /**
- * DevPanel - Developer debugging panel for RenderTracker
+ * DevPanel - Developer debugging panel for RenderTracker  
  * Displays real-time render tracking information and statistics
+ * 
+ * Logic: useDevPanel hook
+ * UI: This component
  */
 
-import React, { useState, useEffect } from 'react'
-import { useRenderTracker } from '../hooks/useRenderTracker'
-import { setTrackerEnabled } from '../core/trackerConfig'
-import type { RenderStats } from '../core/renderTrackerTypes'
+import React from 'react'
+import { useDevPanel } from './hooks/useDevPanel'
 import './DevPanel.css'
 
 interface DevPanelProps {
@@ -24,51 +25,25 @@ interface DevPanelProps {
  * - Click to see render details
  * - Memory usage estimation
  * - Live updates every 500ms
- *
- * @example
- * import { DevPanel } from '@/components'
- *
- * function App() {
- *   return (
- *     <>
- *       <Dashboard />
- *       <DevPanel initialOpen={true} />
- *     </>
- *   )
- * }
  */
 export const DevPanel: React.FC<DevPanelProps> = ({ initialOpen = true }) => {
-  const tracker = useRenderTracker()
-  const [isOpen, setIsOpen] = useState(initialOpen)
-  const [isEnabled, setIsEnabled] = useState(tracker.isEnabled())
-  const [stats, setStats] = useState<Record<string, RenderStats>|null>(null)
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
-  const [refreshTime, setRefreshTime] = useState<number>(Date.now())
+  const {
+    isOpen,
+    isEnabled,
+    stats,
+    selectedNodeId,
+    refreshTime,
+    systemStats,
+    componentsTracked,
+    selectedStats,
+    setIsOpen,
+    handleToggleTracking,
+    setSelectedNodeId,
+  } = useDevPanel(initialOpen)
 
-  // Update stats every 500ms
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStats(tracker.getAllStats())
-      setIsEnabled(tracker.isEnabled())
-      setRefreshTime(Date.now())
-    }, 500)
-
-    return () => clearInterval(interval)
-  }, [tracker])
-
-  // Initial stats load
-  useEffect(() => {
-    setStats(tracker.getAllStats())
-  }, [tracker])
-
-  const handleToggleTracking = () => {
-    const newState = !isEnabled
-    setTrackerEnabled(newState)
-    setIsEnabled(newState)
+  if (!stats) {
+    return null
   }
-
-  const systemStats = stats ? tracker.getSystemStats() : null
-  const componentsTracked = stats ? Object.keys(stats).length : 0
 
   const panelStyle: React.CSSProperties = {
     position: 'fixed',
@@ -149,12 +124,6 @@ export const DevPanel: React.FC<DevPanelProps> = ({ initialOpen = true }) => {
     borderRadius: '4px',
     border: '1px solid #333',
   }
-
-  if (!stats) {
-    return null
-  }
-
-  const selectedStats = selectedNodeId ? stats[selectedNodeId] : null
 
   return (
     <div style={panelStyle}>
