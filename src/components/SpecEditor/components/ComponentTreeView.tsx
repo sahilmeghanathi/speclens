@@ -59,22 +59,29 @@ const TreeNodeComponent = memo(function TreeNode({
 
   return (
     <div className="tree-node">
-      <button
+      <div
         onClick={handleSelect}
-        type="button"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleSelect();
+          }
+        }}
         aria-pressed={selected === node.id}
         className={`tree-node-content ${selected === node.id ? 'selected' : ''}`}
       >
         {node.children.length > 0 && (
-          <button
+          <span
             onClick={handleToggle}
-            type="button"
+            role="button"
+            tabIndex={-1}
             className={`tree-node-toggle ${expanded ? 'expanded' : ''}`}
             aria-expanded={expanded}
             aria-label="Toggle node"
           >
             ▶
-          </button>
+          </span>
         )}
         {node.children.length === 0 && <span className="tree-node-toggle">·</span>}
 
@@ -83,7 +90,7 @@ const TreeNodeComponent = memo(function TreeNode({
         </span>
         <span className="tree-node-name">{node.type}</span>
         <span className="tree-node-count">({node.renderCount})</span>
-      </button>
+      </div>
 
       {expanded &&
         node.children.map((child) => (

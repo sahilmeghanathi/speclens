@@ -1,4 +1,4 @@
-import { useEffect, useMemo, memo, type ReactNode } from 'react';
+import { useMemo, memo, type ReactNode } from 'react';
 import { useSpecEditor } from './hooks/useSpecEditor';
 import { useDebounce } from './hooks/useDebounce';
 import { useSpecEditorLogic } from './hooks/useSpecEditorLogic';
@@ -9,97 +9,6 @@ import { MetricsSummary } from './components/MetricsSummary';
 import { ComponentTreeView } from './components/ComponentTreeView';
 import { renderNode } from '../../core/renderer';
 import './SpecEditor.css';
-
-const DEFAULT_SPEC = JSON.stringify(
-  {
-    type: 'Card',
-    id: 'root-card',
-    props: {
-      title: '📊 Demo Analytics Dashboard',
-    },
-    children: [
-      {
-        type: 'Grid',
-        id: 'metrics-grid',
-        props: {
-          columns: 3,
-        },
-        children: [
-          {
-            type: 'StatCard',
-            id: 'stat-1',
-            props: {
-              label: 'Total Revenue',
-              value: '$45,231',
-              change: '+12.5%',
-            },
-          },
-          {
-            type: 'StatCard',
-            id: 'stat-2',
-            props: {
-              label: 'Active Users',
-              value: '8,391',
-              change: '+8.2%',
-            },
-          },
-          {
-            type: 'StatCard',
-            id: 'stat-3',
-            props: {
-              label: 'Conversion Rate',
-              value: '3.24%',
-              change: '+2.1%',
-            },
-          },
-        ],
-      },
-      {
-        type: 'Grid',
-        id: 'content-grid',
-        props: {
-          columns: 2,
-        },
-        children: [
-          {
-            type: 'Card',
-            id: 'card-1',
-            props: {
-              title: '✨ Interactive Components',
-              description: 'Try changing the "type" property to StatCard, Card, or Grid to see different components rendered. Edit in real-time on the left!',
-            },
-          },
-          {
-            type: 'Card',
-            id: 'card-2',
-            props: {
-              title: '📈 Real-time Updates',
-              description: 'Changes to the JSON spec are reflected instantly in the preview. Check the render metrics below to track performance.',
-            },
-          },
-          {
-            type: 'Card',
-            id: 'card-3',
-            props: {
-              title: '🎯 Component Props',
-              description: 'Each component type has different props. StatCard uses label, value, change. Card uses title, description. Grid uses columns.',
-            },
-          },
-          {
-            type: 'Card',
-            id: 'card-4',
-            props: {
-              title: '🔧 Try It Yourself',
-              description: 'Edit the JSON on the left. Change "columns" in Grid, add more StatCards, or modify Card titles to see the demo in action!',
-            },
-          },
-        ],
-      },
-    ],
-  },
-  null,
-  2
-);
 
 /**
  * Preview content component - memoized to prevent re-renders.
@@ -150,20 +59,13 @@ export const SpecEditor = memo(function SpecEditor() {
     setValidationErrors,
   } = useSpecEditor();
 
-  const debouncedJson = useDebounce(specJson || DEFAULT_SPEC, 300);
+  const debouncedJson = useDebounce(specJson, 300);
   const { dividerPos, isDragging, handleMouseDown, handleSave } = useSpecEditorLogic({
     specJson,
     debouncedJson,
     setParsedSpec,
     setValidationErrors,
   });
-
-  // Initialize with default spec if empty - once on mount
-  useEffect(() => {
-    if (!specJson) {
-      setSpecJson(DEFAULT_SPEC);
-    }
-  }, []);
 
   // Memoize preview props to prevent child re-renders
   const previewProps = useMemo(
@@ -185,7 +87,7 @@ export const SpecEditor = memo(function SpecEditor() {
         <div className="spec-editor-left-panel" style={{ width: `${dividerPos}%` }}>
           <div className="spec-editor-panel-header">JSON Editor</div>
           <JSONEditor
-            value={specJson || DEFAULT_SPEC}
+            value={specJson}
             onChange={setSpecJson}
             validationErrors={validationErrors}
             onValidation={setValidationErrors}

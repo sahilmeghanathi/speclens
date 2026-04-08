@@ -72,7 +72,7 @@ export function useComponentTree(parsedSpec: any) {
     // Poll every 500ms
     const interval = setInterval(updateMetrics, 500)
     return () => clearInterval(interval)
-  }, [treeData, tracker])
+  }, [tracker])
 
   return treeData
 }

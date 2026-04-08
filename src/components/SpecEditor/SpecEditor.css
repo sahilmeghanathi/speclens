@@ -427,6 +427,7 @@ font-size: 28px;
   gap: 6px;
   transition: background 0.1s;
   margin: 2px 0;
+  outline: none;
 }
 
 .tree-node-content:hover {
@@ -446,6 +447,7 @@ font-size: 28px;
   font-size: 10px;
   cursor: pointer;
   transition: transform 0.1s;
+  user-select: none;
 }
 
 .tree-node-toggle.expanded {
