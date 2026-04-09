@@ -33,29 +33,25 @@ export class RenderTracker {
    * Map of component stats keyed by nodeId
    * Stores the lightweight summary data for each component
    */
-  private componentStats: Map<string, ComponentRenderData> = new Map()
+  private readonly componentStats: Map<string, ComponentRenderData> = new Map()
 
   /**
    * Map of render histories keyed by nodeId
    * Stores detailed render event history for each component
    */
-  private renderHistory: Map<string, RenderEvent[]> = new Map()
+  private readonly renderHistory: Map<string, RenderEvent[]> = new Map()
 
   /**
    * Track the first props we see for each component
    * Used to detect if this is the initial render
    */
-  private initialPropsSnapshot: Map<string, Record<string, any>> = new Map()
+  private readonly initialPropsSnapshot: Map<string, Record<string, any>> = new Map()
 
   /**
    * Subscribers that want to be notified of tracker updates
    * Used by React hooks to trigger re-renders
    */
-  private subscribers: Set<() => void> = new Set()
-
-  constructor() {
-    // Initialize with config settings
-  }
+  private readonly subscribers: Set<() => void> = new Set()
 
   /**
    * Record a render event for a component
@@ -85,7 +81,10 @@ export class RenderTracker {
     this._ensureComponentEntry(nodeId)
 
     // Get current stats for this component
-    const stats = this.componentStats.get(nodeId)!
+    const stats = this.componentStats.get(nodeId);
+    if (!stats) {
+      return;
+    }
     const isInitialRender = stats.totalRenders === 0
 
     // Detect what changed
@@ -103,7 +102,7 @@ export class RenderTracker {
     const renderEvent: RenderEvent = {
       timestamp: now,
       renderCount: stats.totalRenders + 1,
-      duration: undefined, // TODO: capture from React Profiler if enabled
+      duration: undefined,
       prevProps: prevProps || {},
       currentProps: currentProps || {},
       propChanges,

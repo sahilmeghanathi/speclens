@@ -34,7 +34,7 @@ const PreviewContentComponent = memo(function PreviewContent({
   if (parsedSpec) {
     return (
       <ErrorBoundary>
-        <div className="spec-editor-render">{renderNode(parsedSpec as any)}</div>
+        <div className="spec-editor-render">{renderNode(parsedSpec)}</div>
       </ErrorBoundary>
     );
   }

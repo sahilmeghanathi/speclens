@@ -36,6 +36,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard-container">
+      
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-title">
@@ -306,6 +307,7 @@ export const Dashboard: React.FC = () => {
           Tracking {isEnabled ? '🟢 enabled' : '🔴 disabled'}
         </div>
       </footer>
+
     </div>
   )
 }
