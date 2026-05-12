@@ -143,23 +143,4 @@ export const SPEC_TEMPLATES: SpecTemplate[] = [
   },
 ];
 
-/**
- * Get all available templates.
- */
-export function getTemplates(): SpecTemplate[] {
-  return SPEC_TEMPLATES;
-}
 
-/**
- * Get template by name.
- */
-export function getTemplateByName(name: string): SpecTemplate | undefined {
-  return SPEC_TEMPLATES.find((t) => t.name === name);
-}
-
-/**
- * Convert template to JSON string.
- */
-export function templateToJSON(template: SpecTemplate): string {
-  return JSON.stringify(template.spec, null, 2);
-}
